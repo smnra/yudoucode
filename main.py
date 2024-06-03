@@ -67,3 +67,7 @@ v2rayText = v2raySession.text
 print(v2rayText)
 
 pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayUrl)
+
+#  写入文件
+with open("v.txt", "w", encoding="utf-8") as f:
+    f.write(v2rayText)
