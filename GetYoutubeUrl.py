@@ -19,7 +19,7 @@ def getYoutubeUrl():
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新youtube链接：" + youtubeUrl)
 
     # 返回youtube的链接和session对象
-    return {'url' : youtubeUrl,'session' : session,'response' : yudouSession}
+    return {'url' : youtubeUrl,'session' : session,'response' : youtubeSession}
 
 if __name__ == '__main__':
     print(getYoutubeUrl())
