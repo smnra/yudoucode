@@ -2,14 +2,17 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 
-
-name: Python application
+name: yudoucode-action
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    paths:
+      - '.github/workflows/**'
+
+env:
+  TZ: Asia/Shanghai
+
 
 permissions:
   contents: read
@@ -28,7 +31,7 @@ jobs:
       run: ffmpeg -version
 
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: Set up Python 3.9
       uses: actions/setup-python@v3
       with:
@@ -38,7 +41,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-     
-    - name: run main.py
+
+
+  # 每天定时执行
+  run-daily:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run Daily Job
+      uses: actions/checkout@v3
       run: |
         python main.py
+
+
+# 每天定时触发run-daily作业
+on:
+  schedule:
+    - cron:  '0 1 9 * *' # 每天9点触发
+
