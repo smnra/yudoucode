@@ -17,3 +17,8 @@ def pushplus_notify(title, content):
     body = json.dumps(data).encode(encoding='utf-8')
     headers = {'Content-Type': 'application/json'}
     requests.post(url, data=body, headers=headers)
+
+if __name__ == '__main__':
+    title = '测试标题'
+    content = '测试内容'
+    pushplus_notify(title, content)

@@ -66,4 +66,4 @@ v2raySession = video_result['session'].get(v2rayUrl)
 v2rayText = v2raySession.text
 print(v2rayText)
 
-pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayText)
+pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayUrl)
