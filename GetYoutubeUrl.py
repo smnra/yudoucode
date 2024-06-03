@@ -1,36 +1,25 @@
-from playwright.sync_api import sync_playwright
+from requests_html import HTMLSession
+from datetime import datetime
 
 
+def getYoutubeUrl():
+    session = HTMLSession()
+    # 其中get请求中的参数和requests库中的get是一样的可以随意添加
 
-def on_load():
-    print("页面加载完成！")
+    # 这里是获取yudou66的首页最新的一个分享文章的链接
+    yudouSession = session.get('https://www.yudou66.com/')
+    yudouAElement = yudouSession.html.xpath('//*[@id="Blog1"]/div[1]/article[1]/div[1]/h2/a')
+    yudouUrl = yudouAElement[0].attrs['href']
+    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新文章链接：" + yudouUrl)
 
+    # 获取youtube的的链接
+    youtubeSession = session.get(yudouUrl)
+    youtubeElement = youtubeSession.html.xpath('//*[@id="post-body"]/p[8]/a')
+    youtubeUrl = youtubeElement[0].attrs['href']
+    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新youtube链接：" + youtubeUrl)
 
-def getYoutubeUrl(playwright):
-    browser = playwright.chromium.launch()
-    page = browser.new_page()
-
-    # 导航
-    page.goto("https://www.yudou66.com/")
-
-    page.on('domcontentloaded', on_load)
-    # 点击进入最新的一个免费分享
-    page.locator('//*[@id="Blog1"]/div[1]/article[1]/div[1]/h2/a').wait_for(state="attached")      # 等待 元素出现
-    yudouAElement = page.locator('//*[@id="Blog1"]/div[1]/article[1]/div[1]/h2/a')                 # 最新的一个今日分享A元素
-    yudouUrl = yudouAElement.get_attribute("href")                                                 # 最新的一个今日分享A元素的url链接地址
-
-
-
-
-    page.goto(yudouUrl)
-    page.locator('//*[@id="post-body"]/p[8]/a').wait_for(state="attached")                         # 等待 元素出现
-    youtubeAElement = page.locator('//*[@id="post-body"]/p[8]/a')                                  # 获取youtube视频链接A元素
-    youtubeUrl = youtubeAElement.get_attribute("href")                                             # 获取youtube视频链接A元素 url
-    print(youtubeUrl)
-    print(youtubeUrl)
-    browser.close()
-    return youtubeUrl
+    # 返回youtube的链接和session对象
+    return {'url' : youtubeUrl,'session' : session,'response' : yudouSession}
 
 if __name__ == '__main__':
-    with sync_playwright() as p:
-        youtubeUrl = getYoutubeUrl(p)
+    print(getYoutubeUrl())
