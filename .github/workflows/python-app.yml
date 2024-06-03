@@ -35,7 +35,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt;
+        # if [ -f requirements.txt ]; then pip install -r requirements.txt;
+        pip install -y requests_html==0.10.0
+        pip install -y lxml==5.2.2
+        pip install -y lxml_html_clean==0.1.1
+        pip install -y pytube==15.0.0
+        pip install -y pydub==0.25.1
+        pip install -y speechrecognition==3.10.0
         
     - name: Run Daily Job
       run: |
