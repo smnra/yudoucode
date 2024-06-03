@@ -50,7 +50,7 @@ jobs:
     - name: Update Submodules
       run: |
         git -c credential.helper= -c core.quotepath=false -c log.showSignature=false add --ignore-errors -A -f -- v.txt
-        git -c credential.helper= -c core.quotepath=false -c log.showSignature=false commit -m `date +'%Y-%m-%d %H:%M:%S'`
+        git -c credential.helper= -c core.quotepath=false -c log.showSignature=false commit -m `date +'%Y%m%d_%H%M%S'`
         git -c credential.helper= -c core.quotepath=false -c log.showSignature=false push --progress --porcelain github refs/heads/master:master
 
 
