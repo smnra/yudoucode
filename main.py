@@ -2,7 +2,7 @@ from pytube import YouTube
 from pydub import AudioSegment
 import speech_recognition as sr
 from datetime import datetime
-import os
+import pushplus
 
 import GetYoutubeUrl
 
@@ -65,3 +65,5 @@ print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链�
 v2raySession = video_result['session'].get(v2rayUrl)
 v2rayText = v2raySession.text
 print(v2rayText)
+
+pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayText)
