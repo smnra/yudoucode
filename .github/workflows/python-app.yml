@@ -37,7 +37,9 @@ jobs:
         env:
           GITHUB_LOGIN: smnra
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        run: python3 main.py
+        run: |
+          source venv/bin/activate
+          python3 main.py
       - name: config git info
         run: |
           git config --global user.email "hppall@163.com"
@@ -45,7 +47,7 @@ jobs:
       - name: commit change
         run: |
           git checkout master
-          git add .
+          git add ./v.txt
           git commit -m "Update from Github Action"
       - name: push change
         env:
