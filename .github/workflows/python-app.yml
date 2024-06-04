@@ -22,6 +22,7 @@ jobs:
       with:
         path: '~/yudoucode/'        # 指定的工作目录路径
 
+    - uses: actions/checkout@v3
     - name: Install FFmpeg
       run: |
         pwd
