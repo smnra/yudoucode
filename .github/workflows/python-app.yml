@@ -30,17 +30,17 @@ jobs:
           pip install --upgrade pip
           pip install requests_html==0.10.0 lxml==5.2.2 lxml_html_clean==0.1.1 pytube==15.0.0 pydub==0.25.1 speechrecognition==3.10.0
           pwd
-          ls -lah
+          ls -lah  ./
           echo "创建并激活虚拟环境，安装依赖成功" 
 
 
       - name: 运行主程序
         run: |
-          pwd
-          ls -lah
           source venv/bin/activate  #               # 再次确保激活虚拟环境
           which python                                # 显示当前使用的Python解释器路径，确认是否在虚拟环境中
           python main.py
+          pwd
+          ls -lah  ./
 
       - name: 配置Git
         run: |
@@ -56,11 +56,10 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           ls -lah ./v.txt
+          ls -lah ./
           pwd
-          echo $GITHUB_REF
           
           git pull                           # 确保本地是最新的
           git add ./v.txt # 添加特定文件的改动，根据实际情况调整
           git commit -m "Automatic update at $(date)" || true # 防止没有改动时出错
-          echo $GITHUB_REF
-          git push origin HEAD:$GITHUB_REF
+          git push origin main
