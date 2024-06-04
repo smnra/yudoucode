@@ -47,6 +47,12 @@ jobs:
       run: |
         python main.py
 
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }} # 使用GITHUB_TOKEN进行身份验证
+
     - name: Set up Git config
       run: |
         git config user.name "smnra"
@@ -59,5 +65,14 @@ jobs:
         git -c credential.helper= -c core.quotepath=false -c log.showSignature=false push --progress --porcelain github refs/heads/master:master
 
 
-
+    - name: Add, Commit, and Push
+      env:
+        # 设置必要的环境变量
+        GIT_USER: ${{ github.actor }} # 使用触发工作流的用户
+      run: |
+        git -c credential.helper="store --file=/tmp/git-credentials" add --ignore-errors -A -f -- v.txt
+        git -c credential.helper="store --file=/tmp/git-credentials" commit -m "Auto-commit at $(date +'%Y%m%d_%H%M%S')"
+        echo "${{ secrets.GITHUB_TOKEN }}">/tmp/git-credentials
+        chmod 600 /tmp/git-credentials # 确保凭据文件权限安全
+        git -c credential.helper="store --file=/tmp/git-credentials" push origin HEAD:$GITHUB_REF # 使用GITHUB_REF正确引用当前分支
 
