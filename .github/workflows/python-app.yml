@@ -42,11 +42,13 @@ jobs:
           python3 main.py
       - name: config git info
         run: |
+          source venv/bin/activate
           git config --global user.email "hppall@163.com"
           git config --global user.name "smnra"
       - name: commit change
         run: |
-          git checkout master
+          source venv/bin/activate
+          git checkout main
           git add ./v.txt
           git commit -m "Update from Github Action"
       - name: push change
@@ -54,6 +56,7 @@ jobs:
           GITHUB_LOGIN: smnra
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          source venv/bin/activate
           git push https://$GITHUB_LOGIN:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
       - name: done
         run: echo 'done
