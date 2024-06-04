@@ -15,12 +15,18 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # 指定使用Ubuntu 20.04
-
+    runs-on: ubuntu-20.04           # 指定使用Ubuntu 20.04
     steps:
     - uses: actions/checkout@v3
+    - name: Checkout to specific directory
+      with:
+        path: '~/yudoucode/'        # 指定的工作目录路径
+
     - name: Install FFmpeg
       run: |
+        pwd
+        ls -la
+        whoami
         sudo apt-get update
         sudo apt-get install -y ffmpeg
     - name: Test FFmpeg
