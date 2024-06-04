@@ -30,11 +30,17 @@ jobs:
           pip install --upgrade pip
           pip install requests_html==0.10.0 lxml==5.2.2 lxml_html_clean==0.1.1 pytube==15.0.0 pydub==0.25.1 speechrecognition==3.10.0
           pwd
-          ls
-          python main.py
+          ls -lah
+          echo "创建并激活虚拟环境，安装依赖成功" 
+
 
       - name: 运行主程序
-        run: python main.py
+        run: |
+          pwd
+          ls -lah
+          source venv/bin/activate  #               # 再次确保激活虚拟环境
+          which python                                # 显示当前使用的Python解释器路径，确认是否在虚拟环境中
+          python main.py
 
       - name: 配置Git
         run: |
