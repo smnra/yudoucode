@@ -24,6 +24,9 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install requests_html==0.10.0 lxml==5.2.2 lxml_html_clean==0.1.1 pytube==15.0.0 pydub==0.25.1 speechrecognition==3.10.0
+          pwd
+          ls
+          python main.py
 
       - name: 安装FFmpeg
         run: |
