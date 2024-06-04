@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 1 * * *' # 每天早上9点执行 (HH MM HH 时, MM 分, DD 日, MM 月, DD 周)
+
+
 
 jobs:
   build-and-deploy:
@@ -13,7 +17,7 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v3
 
-      - name: 设置Python环境至3.10.14 测试错误
+      - name: 设置Python环境至3.10.14
         uses: actions/setup-python@v3
         with:
           python-version: "3.10.14"
@@ -29,34 +33,25 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install requests_html==0.10.0 lxml==5.2.2 lxml_html_clean==0.1.1 pytube==15.0.0 pydub==0.25.1 speechrecognition==3.10.0
-          pwd
-          ls -lah  ./
-          echo "创建并激活虚拟环境，安装依赖成功" 
 
-      - name: run python script
-        env:
-          GITHUB_LOGIN: smnra
-          GITHUB_TOKEN: ${{ secrets.GT_PAT }}
+      - name: 运行主程序
         run: |
           source venv/bin/activate
           python3 main.py
-      - name: config git info
+
+      - name: 配置Git
         run: |
-          source venv/bin/activate
+          git config --global user.name "snmra"
           git config --global user.email "hppall@163.com"
-          git config --global user.name "smnra"
-      - name: commit change
-        run: |
-          source venv/bin/activate
-          git checkout master
-          git add ./v.txt
-          git commit -m "Update from Github Action"
-      - name: push change
+          git remote set-url origin https://$GITHUB_TOKEN@github.com/smnra/yudoucode.git
         env:
-          GITHUB_LOGIN: smnra
           GITHUB_TOKEN: ${{ secrets.GT_PAT }}
+
+      - name: 提交并推送更改
         run: |
-          source venv/bin/activate
-          git push https://$GITHUB_LOGIN:$GT_PAT@github.com/$GITHUB_REPOSITORY.git
-      - name: done
-        run: echo 'done
+          git pull # 确保本地是最新的
+          git add . # 添加所有改动，根据实际情况调整
+          git diff-index --quiet HEAD || git commit -m "Automatic update at $(date)" # 只有改动才提交
+          git push origin HEAD:$GITHUB_REF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GT_PAT }}
