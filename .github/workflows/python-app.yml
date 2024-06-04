@@ -1,85 +1,61 @@
-name: yudoucode-action
+name: 更新与提交工作流程
 
 on:
   push:
     branches:
-      - master
-  schedule:
-    - cron:  '0 1 9 * *' # 每天1点触发
-
-env:
-  TZ: Asia/Shanghai
-
-permissions:
-  contents: read
+      - main
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04           # 指定使用Ubuntu 20.04
-    steps:
-    - uses: actions/checkout@v3
-    - name: Checkout to specific directory
-      with:
-        path: '~/yudoucode/'        # 指定的工作目录路径
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
-    - uses: actions/checkout@v3
-    - name: Install FFmpeg
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+
+    - name: 设置Python环境至3.10.14
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10.14"
+
+    - name: 创建并激活虚拟环境，安装依赖
+      run: |
+        pwd
+        ls -la
+        whoami
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install requests_html==0.10.0 lxml==5.2.2 lxml_html_clean==0.1.1 pytube==15.0.0 pydub==0.25.1 speechrecognition==3.10.0
+
+    - name: 安装FFmpeg
       run: |
         pwd
         ls -la
         whoami
         sudo apt-get update
         sudo apt-get install -y ffmpeg
-    - name: Test FFmpeg
-      run: ffmpeg -version
 
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10.14
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10.14"
-    - name: Install dependencies
+    - name: 运行主程序
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        # if [ -f requirements.txt ]; then pip install -r requirements.txt;
-        pip install requests_html==0.10.0
-        pip install lxml==5.2.2
-        pip install lxml_html_clean==0.1.1
-        pip install pytube==15.0.0
-        pip install pydub==0.25.1
-        pip install speechrecognition==3.10.0
-        
-    - name: Run Daily Job
-      run: |
+        pwd
+        ls -la
+        whoami
         python main.py
 
-
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }} # 使用GITHUB_TOKEN进行身份验证
-
-    - name: Set up Git config
+    - name: 配置Git
       run: |
-        git config user.name "smnra"
-        git config user.email "hppall@163.com"
+        git config --global user.name "smnra"
+        git config --global user.email "hppall@163.com"
 
-    - name: Update Submodules
-      run: |
-        git -c credential.helper= -c core.quotepath=false -c log.showSignature=false add --ignore-errors -A -f -- v.txt
-        git -c credential.helper= -c core.quotepath=false -c log.showSignature=false commit -m `date +'%Y%m%d_%H%M%S'`
-        git -c credential.helper= -c core.quotepath=false -c log.showSignature=false push --progress --porcelain github refs/heads/master:master
-
-
-    - name: Add, Commit, and Push
+    - name: 提交并推送更改
       env:
-        # 设置必要的环境变量
-        GIT_USER: ${{ github.actor }} # 使用触发工作流的用户
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git -c credential.helper="store --file=/tmp/git-credentials" add --ignore-errors -A -f -- v.txt
-        git -c credential.helper="store --file=/tmp/git-credentials" commit -m "Auto-commit at $(date +'%Y%m%d_%H%M%S')"
-        echo "${{ secrets.GITHUB_TOKEN }}">/tmp/git-credentials
-        chmod 600 /tmp/git-credentials # 确保凭据文件权限安全
-        git -c credential.helper="store --file=/tmp/git-credentials" push origin HEAD:$GITHUB_REF # 使用GITHUB_REF正确引用当前分支
-
+        pwd
+        ls -la
+        whoami
+        git pull         # 确保本地是最新的
+        git add ./v.txt  # 添加所有改动
+        git diff-index --quiet HEAD || git commit -m "Automatic update at $(date)" # 只有当有改动时才提交
+        git push origin HEAD:$GITHUB_REF
