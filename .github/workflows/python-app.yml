@@ -46,13 +46,21 @@ jobs:
         run: |
           git config --global user.name "snmra"
           git config --global user.email "hppall@163.com"
+          git remote set-url origin https://$GH_PAT@github.com/smnra/yudoucode.git
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
 
       - name: 提交并推送更改
         env:
           # 替换GITHUB_TOKEN为GH_PAT
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git pull # 确保本地是最新的
+          ls -lah ./v.txt
+          pwd
+          echo $GITHUB_REF
+          
+          git pull                           # 确保本地是最新的
           git add ./v.txt # 添加特定文件的改动，根据实际情况调整
-          git diff-index --quiet HEAD || git commit -m "Automatic update at $(date)" # 只有当有改动时才提交
+          git commit -m "Automatic update at $(date)" || true # 防止没有改动时出错
+          echo $GITHUB_REF
           git push origin HEAD:$GITHUB_REF
