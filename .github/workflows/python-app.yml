@@ -36,7 +36,7 @@ jobs:
       - name: run python script
         env:
           GITHUB_LOGIN: smnra
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GT_PAT }}
         run: |
           source venv/bin/activate
           python3 main.py
@@ -54,7 +54,7 @@ jobs:
       - name: push change
         env:
           GITHUB_LOGIN: smnra
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GT_PAT }}
         run: |
           source venv/bin/activate
           git push https://$GITHUB_LOGIN:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git
