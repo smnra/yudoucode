@@ -45,7 +45,7 @@ jobs:
 
     - name: 配置Git
       run: |
-        git config --global user.name "smnra"
+        git config --global user.name "snmra"
         git config --global user.email "hppall@163.com"
 
     - name: 提交并推送更改
