@@ -47,6 +47,11 @@ jobs:
       run: |
         python main.py
 
+    - name: Set up Git config
+      run: |
+        git config user.name "smnra"
+        git config user.email "hppall@163.com"
+
     - name: Update Submodules
       run: |
         git -c credential.helper= -c core.quotepath=false -c log.showSignature=false add --ignore-errors -A -f -- v.txt
