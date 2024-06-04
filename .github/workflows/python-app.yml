@@ -49,7 +49,8 @@ jobs:
 
       - name: 提交并推送更改
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 替换GITHUB_TOKEN为GH_PAT
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git pull # 确保本地是最新的
           git add ./v.txt # 添加特定文件的改动，根据实际情况调整
