@@ -48,7 +48,8 @@ jobs:
       - name: 提交并推送更改
         run: |
           git pull # 确保本地是最新的
-          git add . # 添加所有改动，根据实际情况调整
+          git add ./docs/index.html # 添加所有改动，根据实际情况调整
+          git add ./docs/v2ray/index.html # 添加所有改动，根据实际情况调整
           git diff-index --quiet HEAD || git commit -m "Automatic update at $(date)" # 只有改动才提交
           git push origin HEAD:$GITHUB_REF
         env:

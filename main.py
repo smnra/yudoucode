@@ -126,75 +126,14 @@ if __name__ == '__main__':
     # 从页面获取v2ray链接并下载
     v2rayUrl = getV2ray(uncodeSession, mima)
 
-    # 清理临时文件
-    removeTempFile()
-
     # pushplus` 推送到微信
     pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayUrl)
 
-
+    # 清理临时文件
+    removeTempFile()
 
 
 
 
 
 ######################################################################################################################################
-
-# 创建 YouTube 对象
-yt = YouTube(video_url)
-
-# 选择要下载的视频流
-# video_stream = yt.streams.filter(file_extension='mp4').first()
-video_stream = yt.streams.filter(type="audio").first()
-# 下载视频
-video_stream.download(output_path=video_path,filename=video_filename)
-
-
-# mp4 转换音频wav格式
-temp_audio_path = mp4ToWav(video_fullpath, targetpath='temp_audio.wav')
-
-
-# 语音识别为文字
-subtitleGoogle = wavToWav(sourpath='temp_audio.wav')
-
-print(subtitleGoogle)
-mima = subtitleGoogle[(subtitleGoogle.index("密码")+2):(subtitleGoogle.index("密码")+6)]
-
-
-
-mima = getMima(subtitleGoogle)
-print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：",mima)
-
-
-
-
-
-# 执行页面的js代码
-uncodeJs = "multiDecrypt('" + mima + "');"
-uncodeSession = video_result['response']
-uncodeSession.html.render(script=uncodeJs)
-
-
-# 获取 'v2ray/小火箭/winxray等订阅链接，不需要开代理，即可更新订阅链接'
-# '//*[@id="result"]/p[2]/text()[2]'
-v2rayElement = uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')
-v2rayUrl = v2rayElement[0]
-print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：",v2rayUrl)
-
-#  写入文件
-with open("./docs/index.html", "a+", encoding="utf-8") as f:
-    f.write('{},{},{} '.format(datetime.now().strftime("%Y/%m/%d %H:%M:%S") , " 最新的V2Ray订阅链接地址：",v2rayUrl))
-
-
-
-v2raySession = video_result['session'].get(v2rayUrl)
-v2rayText = v2raySession.text
-print(v2rayText)
-#  写入文件
-with open("./docs/v2ray/index.html", "w", encoding="utf-8") as f:
-    f.write(v2rayText)
-
-
-
-pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayUrl)
-
