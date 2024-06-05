@@ -16,7 +16,7 @@ def getYoutubeUrl():
     youtubeSession = session.get(yudouUrl)
     youtubeElement = youtubeSession.html.xpath('//*[@id="post-body"]/p[8]/a')
     youtubeUrl = youtubeElement[0].attrs['href']
-    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新youtube链接：" + youtubeUrl)
+    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新解密youtube视频链接：" + youtubeUrl)
 
     # 返回youtube的链接和session对象
     return {'url' : youtubeUrl,'session' : session,'response' : youtubeSession}

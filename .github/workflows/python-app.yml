@@ -2,11 +2,9 @@ name: 更新与提交工作流程
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
   schedule:
-    - cron: '0 1 * * *' # 每天早上9点执行 (HH MM HH 时, MM 分, DD 日, MM 月, DD 周)
-
+    - cron: '1 1 * * *'  # 这意味着每分钟检查一次，实际中不能设置为每两分钟
 
 
 jobs:
