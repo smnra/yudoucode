@@ -1,8 +1,12 @@
 name: 更新与提交工作流程
 
 on:
+  push:
+    branches: [ "gh_page" ]
+    paths:
+      - '.github/workflows/**'
   schedule:
-    - cron: '*/10 * * * *'  # 这意味着每分钟检查一次，实际中不能设置为每两分钟
+    - cron: '19 1,4 * * *'
 
 env:
   TZ: Asia/Shanghai
