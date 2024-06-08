@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '22 * * * *'
   push:
-    branches: [ "gh_page" ,"master","main"]
+    branches: [ "gh_page" ,"master"]
     paths:
       - '.github/workflows/**'
 
