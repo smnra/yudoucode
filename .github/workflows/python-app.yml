@@ -1,12 +1,12 @@
 name: 更新与提交工作流程
 
 on:
+  schedule:
+    - cron: '22 * * * *'
   push:
-    branches: [ "gh_page" ]
+    branches: [ "gh_page" ,"master","main"]
     paths:
       - '.github/workflows/**'
-  schedule:
-    - cron: '19 1,4 * * *'
 
 env:
   TZ: Asia/Shanghai
