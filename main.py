@@ -21,7 +21,6 @@ video_fullpath = video_path + video_filename
 
 
 
-
 # 转换音频格式
 def mp4ToWav(sourpath, targetpath='temp_audio.wav'):
     # 从视频中提取音频
@@ -40,6 +39,22 @@ def wavToWav(sourpath='temp_audio.wav'):
     return subtitleGoogle
 
 
+
+def validateMima(mimaStr):
+    # 验证密码是否为4位数字
+    try:
+        mima = mimaStr[(mimaStr.index("密码") + 2):(mimaStr.index("密码") + 6)]
+        mimaInt = int(mima)
+        if mimaInt >=1000 and mimaInt <= 9999:
+            return str(mimaInt)
+        else:
+            return -1
+    except Exception as e:
+        print(e)
+        return -1
+
+
+
 # 获取密码
 def getMima(yt):
     videPath = "./video/"
@@ -50,27 +65,25 @@ def getMima(yt):
     videoList = yt.streams.order_by("type").fmt_streams
     # minSizeVideo = yt.streams.filter(type="audio").first()   #获取最低音频流
 
-    for videoStream in videoList:
+    for i,videoStream in enumerate(videoList):
         # 下载视频
         videoStream.download(output_path=videPath, filename=videoFilename)
-
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 第" + str(i+1) + "次下载视频链接：", videoList[i])
         # mp4 转换音频wav格式
-        tempAudioPath = mp4ToWav(videoFullpath, targetpath='temp_audio.wav')
+        tempAudioPath = mp4ToWav(videoFullpath, targetpath=videPath + "temp_audio.wav")
 
         # 语音识别为文字
         subtitleGoogle = wavToWav(sourpath=tempAudioPath)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 提取的文字为 : '+ subtitleGoogle)
 
-        # 如果密码不存在则继续循环
-        if subtitleGoogle.find("密码")>=0:
-            # 截取密码
-            mima = subtitleGoogle[(subtitleGoogle.index("密码") + 2):(subtitleGoogle.index("密码") + 6)]
+        # 验证密码
+        mima = validateMima(subtitleGoogle)
+        if mima != -1:
             print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", mima)
             return mima
         else:
-            print("密码不存在，将删除文件并继续循环")
-            # 清理临时文件
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析密码异常:" + mima + "，将删除文件并继续循环")
             removeTempFile()
-
 
 
 # 使用密码在页面上获取v2ray的免费连接地址 并下载
@@ -92,7 +105,7 @@ def getV2ray(uncodeSession,mima):
     # 下载最新V2Ray订阅链接
     v2raySession = video_result['session'].get(v2rayUrl)
     v2rayText = v2raySession.text
-    print(v2rayText)
+    print('\n', datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 最新V2Ray订阅链接内容：\n', v2rayText)
 
     #  写入github page文件
     with open("./docs/v2ray/index.html", "w", encoding="utf-8") as f:
@@ -103,7 +116,7 @@ def getV2ray(uncodeSession,mima):
 # 清理临时文件
 def removeTempFile():
     video_fullpath = "./video/code.mp4"
-    temp_audio_path = "./temp_audio.wav"
+    temp_audio_path = "./video/temp_audio.wav"
     if os.path.exists(video_fullpath):
         os.remove(video_fullpath)
         print(f"文件 {video_fullpath} 已被删除。")

@@ -10,7 +10,7 @@ def getYoutubeUrl():
     yudouSession = session.get('https://www.yudou66.com/')
     yudouAElement = yudouSession.html.xpath('//*[@id="Blog1"]/div[1]/article[1]/div[1]/h2/a')
     yudouUrl = yudouAElement[0].attrs['href']
-    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新文章链接：" + yudouUrl)
+    print('\n'+datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新文章链接：" + yudouUrl)
 
     # 获取youtube的的链接
     youtubeSession = session.get(yudouUrl)
