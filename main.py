@@ -46,7 +46,7 @@ def validateMima(mimaStr):
         mima = mimaStr[(mimaStr.index("密码") + 2):(mimaStr.index("密码") + 6)]
         mimaInt = int(mima)
         if mimaInt >=1000 and mimaInt <= 9999:
-            return str(mimaInt)
+            return mimaInt
         else:
             return -1
     except Exception as e:
@@ -79,10 +79,10 @@ def getMima(yt):
         # 验证密码
         mima = validateMima(subtitleGoogle)
         if mima != -1:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", mima)
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", str(mima))
             return mima
         else:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析密码异常:" + mima + "，将删除文件并继续循环")
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析密码异常:" + str(mima) + "，将删除文件并继续循环")
             removeTempFile()
 
 
