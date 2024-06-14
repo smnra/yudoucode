@@ -66,25 +66,31 @@ def getMima(yt):
     # minSizeVideo = yt.streams.filter(type="audio").first()   #获取最低音频流
 
     for i,videoStream in enumerate(videoList):
-        # 下载视频
-        videoStream.download(output_path=videPath, filename=videoFilename)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 第" + str(i+1) + "次下载视频链接：", videoList[i])
-        # mp4 转换音频wav格式
-        tempAudioPath = mp4ToWav(videoFullpath, targetpath=videPath + "temp_audio.wav")
 
-        # 语音识别为文字
-        subtitleGoogle = wavToWav(sourpath=tempAudioPath)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 提取的文字为 : '+ subtitleGoogle)
+        try:
+            # 下载视频
+            videoStream.download(output_path=videPath, filename=videoFilename)
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 第" + str(i+1) + "次下载视频链接：", videoList[i])
+            # mp4 转换音频wav格式
+            tempAudioPath = mp4ToWav(videoFullpath, targetpath=videPath + "temp_audio.wav")
 
-        # 验证密码
-        mima = validateMima(subtitleGoogle)
-        if mima != -1:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", str(mima))
-            return mima
-        else:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析密码异常:" + str(mima) + "，将删除文件并继续循环")
+            # 语音识别为文字
+            subtitleGoogle = wavToWav(sourpath=tempAudioPath)
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 提取的文字为 : '+ subtitleGoogle)
+
+            # 验证密码
+            mima = validateMima(subtitleGoogle)
+            if mima != -1:
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", str(mima))
+                return mima
+            else:
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析密码异常:" + str(mima) + "，将删除文件并继续循环")
+                removeTempFile()
+                continue
+        except Exception as e:
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 过程异常：", e)
             removeTempFile()
-
+            continue
 
 # 使用密码在页面上获取v2ray的免费连接地址 并下载
 def getV2ray(uncodeSession,mima):
