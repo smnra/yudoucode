@@ -5,6 +5,9 @@ from datetime import datetime
 import pushplus
 import os
 import GetYoutubeUrl
+import speechToText.baiduSpeech  as baiduSpeech
+
+
 
 
 # 获取要下载的 YouTube 视频链接
@@ -31,7 +34,7 @@ def mp4ToWav(sourpath, targetpath='temp_audio.wav'):
 
 
 # 语音识别为文字
-def wavToWav(sourpath='temp_audio.wav'):
+def wavToText(sourpath='temp_audio.wav'):
     recognizer = sr.Recognizer()
     with sr.AudioFile(sourpath) as source:
         audio_data = recognizer.record(source)
@@ -75,7 +78,7 @@ def getMima(yt):
             tempAudioPath = mp4ToWav(videoFullpath, targetpath=videPath + "temp_audio.wav")
 
             # 语音识别为文字
-            subtitleGoogle = wavToWav(sourpath=tempAudioPath)
+            subtitleGoogle = wavToText(sourpath=tempAudioPath)
             print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 提取的文字为 : '+ subtitleGoogle)
 
             # 验证密码
@@ -84,10 +87,26 @@ def getMima(yt):
                 print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", str(mima))
                 return mima
             else:
+                subtitleBaidu = baiduSpeech.wavToText(tempAudioPath)
+                # 验证密码
+                mima = validateMima(subtitleBaidu)
+                if mima != -1:
+                    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", str(mima))
+                    return mima
+                else:
+                    continue
                 print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析密码异常:" + str(mima) + "，将删除文件并继续循环")
                 removeTempFile()
                 continue
         except Exception as e:
+            subtitleBaidu = baiduSpeech.wavToText(tempAudioPath)
+            # 验证密码
+            mima = validateMima(subtitleBaidu)
+            if mima != -1:
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 密码：", str(mima))
+                return mima
+            else:
+                continue
             print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 过程异常：", e)
             removeTempFile()
             continue
@@ -95,7 +114,7 @@ def getMima(yt):
 # 使用密码在页面上获取v2ray的免费连接地址 并下载
 def getV2ray(uncodeSession,mima):
     # 执行页面的js代码
-    uncodeJs = "multiDecrypt('" + mima + "');"
+    uncodeJs = "multiDecrypt('" + str(mima) + "');"
     uncodeSession.html.render(script=uncodeJs)
 
     # 获取 'v2ray/小火箭/winxray等订阅链接，不需要开代理，即可更新订阅链接'
