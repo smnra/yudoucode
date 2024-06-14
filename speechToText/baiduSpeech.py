@@ -10,9 +10,9 @@ APP_ID = '82419253'
 API_KEY = 'I6KU8my5YbJODFqaTYivk8yd'
 SECRET_KEY = 'mslltsRDNwVCEsmiQjcQih2K9wYHU7au'
 
-APP_ID = os.environ.get("APP_ID")
-API_KEY = os.environ.get("API_KEY")
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# APP_ID = os.environ.get("APP_ID")
+# API_KEY = os.environ.get("API_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 
