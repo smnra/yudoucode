@@ -2,7 +2,7 @@ name: 更新与提交工作流程
 
 on:
   schedule:
-    - cron: '30 0,10 * * *'
+#    - cron: '30 0,10 * * *'
   push:
     branches: [ "gh_page" ]
     paths:
