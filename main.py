@@ -116,6 +116,7 @@ def getV2ray(uncodeSession,mima):
     # 执行页面的js代码
     uncodeJs = "multiDecrypt('" + str(mima) + "');"
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码：', uncodeJs)
+    uncodeSession.html.render(timeout=60000)
     uncodeSession.html.render(script=uncodeJs)
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码wancheng：', uncodeJs)
     # 获取 'v2ray/小火箭/winxray等订阅链接，不需要开代理，即可更新订阅链接'
