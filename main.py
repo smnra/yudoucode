@@ -123,7 +123,7 @@ def getV2ray(uncodeSession,mima):
         # 交互语句
         await uncodeSession.html.page.keyboard.press('Enter')
     try:
-        uncodeSession.loop.run_until_complete(run())
+        video_result['session'].loop.run_until_complete(run())
     finally:
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 页面交互完成:' + uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')[0])
 
