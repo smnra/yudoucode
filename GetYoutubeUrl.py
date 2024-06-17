@@ -19,37 +19,18 @@ def getYoutubeUrl():
     youtubeUrl = youtubeElement[0].attrs['href']
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新解密youtube视频链接：" + youtubeUrl)
 
+
+
+    youtubeSession.html.render(script="document.title = '新的页面标题';", retries=1, timeout=3, sleep=2)
+    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 页面标题：" + youtubeSession.html.find('title', first=True).text)
+
+
     # 返回youtube的链接和session对象
     return {'url' : youtubeUrl,'session' : session,'response' : youtubeSession}
 
 if __name__ == '__main__':
     video_result =getYoutubeUrl()
     print(video_result)
-
-    video_url = video_result['url']
-    uncodeSession = video_result['response']
-    session = video_result['session']
-
-    #   首次执行 页面的js代码 以自动安装 chrome 浏览器 #################################################################
-    def firstExecuteJs(uncodeSession):
-        # 首次执行 页面的js代码
-        try:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码：', "document.title = '新的页面标题';")
-            uncodeSession.html.render(script="document.title = '新的页面标题';", retries=1, timeout=3, sleep=2)
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码完成：', "document.title = '新的页面标题';")
-            return uncodeSession.html.find('title', first=True).text
-        except Exception as e:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码 失败：', e)
-            return uncodeSession.html.find('title', first=True).text
-
-    try:
-        print(firstExecuteJs(uncodeSession))
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + '首次执行 js代码 页面交互完成')
-    except Exception as e:
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + '首次执行 js代码 失败：', e)
-
-    #   首次执行 页面的js代码 以自动安装 chrome 浏览器 #################################################################
-
 
 
 
