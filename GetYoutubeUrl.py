@@ -31,21 +31,23 @@ if __name__ == '__main__':
     session = video_result['session']
 
     #   首次执行 页面的js代码 以自动安装 chrome 浏览器 #################################################################
-    async def firstExecuteJs(uncodeSession):
+    def firstExecuteJs(uncodeSession):
         # 首次执行 页面的js代码
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码：', "multiDecrypt('哈哈哈哈哈哈')")
-        uncodeSession.html.render(timeout=3000)
-        await uncodeSession.html.render(script="multiDecrypt('哈哈哈哈哈哈')", retries=3, timeout=60, sleep=10,
-                                        keep_page='true')
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码完成：', "multiDecrypt('哈哈哈哈哈哈')")
-        # 交互语句
-        await uncodeSession.html.page.keyboard.press('Enter')
-        return uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')[0]
+        try:
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码：', "document.title = '新的页面标题';")
+            uncodeSession.html.render(script="document.title = '新的页面标题';", retries=1, timeout=3, sleep=2)
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码完成：', "document.title = '新的页面标题';")
+            return uncodeSession.html.find('title', first=True).text
+        except Exception as e:
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 首次执行 js代码 失败：', e)
+            return uncodeSession.html.find('title', first=True).text
 
     try:
-        session.loop.run_until_complete(firstExecuteJs(uncodeSession))
-    finally:
+        print(firstExecuteJs(uncodeSession))
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + '首次执行 js代码 页面交互完成')
+    except Exception as e:
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + '首次执行 js代码 失败：', e)
+
     #   首次执行 页面的js代码 以自动安装 chrome 浏览器 #################################################################
 
 
