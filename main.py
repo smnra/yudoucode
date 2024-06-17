@@ -12,7 +12,7 @@ import speechToText.baiduSpeech  as baiduSpeech
 
 # 获取要下载的 YouTube 视频链接
 # video_url = "https://youtu.be/2EJ9pBRUo6k"
-
+i = 0
 video_result = GetYoutubeUrl.getYoutubeUrl()
 
 video_url=video_result['url']
@@ -116,17 +116,27 @@ def getV2ray(uncodeSession,mima):
     # 执行页面的js代码
     uncodeJs = "multiDecrypt('" + str(mima) + "');"
 
-    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码：', uncodeJs)
-    # uncodeSession.html.render(timeout=30000)
-    uncodeSession.html.render(script="multiDecrypt('" + str(mima) + "')",retries = 3,timeout = 60,sleep = 10)
 
-    async def run():
-        # 交互语句
-        await uncodeSession.html.page.keyboard.press('Enter')
-    try:
-        video_result['session'].loop.run_until_complete(run())
-    finally:
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 页面交互完成:' + uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')[0])
+    #################################################################################################
+    def execute_js(uncodeSession,uncodeJs):
+        global i
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 开始执行js代码:' + uncodeJs)
+        try:
+            uncodeSession.html.render(script=uncodeJs,retries = 1,timeout = 30,sleep = 3)
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码成功:' + uncodeJs)
+        except Exception as e:
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码异常：', e)
+            i=i+1
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 重试：'+ str(i) )
+            return  getV2ray(uncodeSession, mima)
+
+        finally:
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码完成' + uncodeJs)
+    ##################################################################################################
+    # 执行js代码
+    execute_js(uncodeSession,uncodeJs)
+
+
 
 
 
