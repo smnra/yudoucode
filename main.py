@@ -120,18 +120,19 @@ def getV2ray(uncodeSession,mima):
     #################################################################################################
     def execute_js(uncodeSession,uncodeJs):
         global i
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 开始执行js代码:' + uncodeJs)
-        try:
-            uncodeSession.html.render(script=uncodeJs,retries = 1,timeout = 30,sleep = 3)
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码成功:' + uncodeJs)
-        except Exception as e:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码异常：', e)
-            i=i+1
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 重试：'+ str(i) )
-            return  getV2ray(uncodeSession, mima)
+        if i<=30:
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 开始执行js代码:' + uncodeJs)
+            try:
+                uncodeSession.html.render(script=uncodeJs,retries = 1,timeout = 30,sleep = 3)
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码成功:' + uncodeJs)
+            except Exception as e:
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码异常：', e)
+                i=i+1
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 重试：'+ str(i) )
+                return  getV2ray(uncodeSession, mima)
 
-        finally:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码完成' + uncodeJs)
+            finally:
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码完成' + uncodeJs)
     ##################################################################################################
     # 执行js代码
     execute_js(uncodeSession,uncodeJs)

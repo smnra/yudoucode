@@ -20,7 +20,7 @@ def getYoutubeUrl():
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新解密youtube视频链接：" + youtubeUrl)
 
     try:
-        youtubeSession.html.render(script="console.log('hhhhhhhhh');", retries=1, timeout=30)
+        youtubeSession.html.render(script="console.log('hhhhhhhhh');", retries=1, timeout=30,sleep=2)
     except Exception as e:  # 这里是为了测试render方法是否正常工作
         print(e)
 
