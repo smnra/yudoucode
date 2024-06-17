@@ -115,30 +115,30 @@ def getMima(yt):
 def getV2ray(uncodeSession,mima):
     # 执行页面的js代码
     uncodeJs = "multiDecrypt('" + str(mima) + "');"
-    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码：', uncodeJs)
-    uncodeSession.html.render(timeout=30000)
-    uncodeSession.html.render(script="multiDecrypt('" + str(mima) + "')",retries = 3,timeout = 60,sleep = 10,keep_page='true')
 
-
-##################################################################################################################################
-
+    ##################################################################################################################################
     async def executeJs(uncodeSession, uncodeJs):
         # 执行页面的js代码
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' executeJs 执行js代码：', uncodeJs)
         uncodeSession.html.render(timeout=30000)
-        await uncodeSession.html.render(script="multiDecrypt('" + str(mima) + "')",retries = 3,timeout = 60,sleep = 10,keep_page='true')
+        await uncodeSession.html.render(script="multiDecrypt('" + str(mima) + "')", retries=3, timeout=60, sleep=10,
+                                        keep_page='true')
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' executeJs 执行js代码完成：', uncodeJs)
         # 交互语句
         await uncodeSession.html.page.keyboard.press('Enter')
         return uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')[0]
+
     try:
         video_result['session'].loop.run_until_complete(executeJs(uncodeSession, uncodeJs))
     finally:
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' executeJs 页面交互完成:' + uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')[0])
-
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' executeJs 页面交互完成:' +
+              uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')[0])
 #####################################################################################################################################
 
 
+    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码：', uncodeJs)
+    uncodeSession.html.render(timeout=30000)
+    uncodeSession.html.render(script="multiDecrypt('" + str(mima) + "')",retries = 3,timeout = 60,sleep = 10,keep_page='true')
 
     async def run():
         # 交互语句
