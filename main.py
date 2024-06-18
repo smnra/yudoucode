@@ -3,24 +3,30 @@ from pydub import AudioSegment
 import speech_recognition as sr
 from datetime import datetime
 import pushplus
-import os
+import os,re
 import GetYoutubeUrl
 import speechToText.baiduSpeech  as baiduSpeech
 
+from requests_html import HTMLSession
+
+
+
+# 视频下载路径
+video_path = "./video/"
+video_filename = "code.mp4"
+video_fullpath = video_path + video_filename
+
+i = 0
 
 
 
 # 获取要下载的 YouTube 视频链接
-# video_url = "https://youtu.be/2EJ9pBRUo6k"
-i = 0
-video_result = GetYoutubeUrl.getYoutubeUrl()
+tmpResult= GetYoutubeUrl.getYoutubeUrl()
+yudouTodayUrl = tmpResult['yudouTodayUrl']      # 今日yudou最新连接
+youtubeUrl = tmpResult['youtubeUrl']            # youtobe最新连接解密视频的链接
 
-video_url=video_result['url']
-uncodeSession = video_result['response']
 
-video_path = "./video/"
-video_filename = "code.mp4"
-video_fullpath = video_path + video_filename
+
 
 
 
@@ -43,14 +49,42 @@ def wavToText(sourpath='temp_audio.wav'):
 
 
 
+
+
+# 要计算一个4位数字的字符串中出现连续两次的数字的个数，可以使用以下代码：
+def count_grouped_consecutive_occurrences(input_str):
+    count = 0
+    i = 0
+    while i < len(input_str) - 1:
+        if input_str[i] == input_str[i + 1]:
+            count += 1
+            i += 2  # 跳过下一个字符
+        else:
+            i += 1
+    return count
+
+
+
+
+
+
+
+
+
 def validateMima(mimaStr):
     # 验证密码是否为4位数字
     try:
-        mima = mimaStr[(mimaStr.index("密码") + 2):(mimaStr.index("密码") + 6)]
-        mimaInt = int(mima)
-        if mimaInt >=1000 and mimaInt <= 9999:
+        mima = mimaStr[(mimaStr.index("密码") + 2):(mimaStr.index("密码") + 10)]
+        mima = re.findall(r'\d+', mima)[0]
+        if len(mima) == 5:
+            mima1 = mima[:4]
+            mima2 = mima[1:5]
+            mimaInt = int(max(count_grouped_consecutive_occurrences(mima1), count_grouped_consecutive_occurrences(mima2)))
             return mimaInt
-        else:
+        elif len(mima) == 4:
+            mimaInt = int(mima)
+            return mimaInt
+        elif len(mima) >= 6 or len(mima) <=3:
             return -1
     except Exception as e:
         print(e)
@@ -59,10 +93,12 @@ def validateMima(mimaStr):
 
 
 # 获取密码
-def getMima(yt):
-    videPath = "./video/"
-    videoFilename = "code.mp4"
-    videoFullpath = videPath + videoFilename
+def getMima(videoUrl,videoFullpath):
+    videPath, videoFilename = os.path.split(videoFullpath)
+    videPath = videPath + r'/'
+
+    # 创建 YouTube 对象
+    yt = YouTube(videoUrl)
 
     # 获取视频可下载的视频列表
     videoList = yt.streams.order_by("type").fmt_streams
@@ -79,7 +115,7 @@ def getMima(yt):
 
             # 语音识别为文字
             subtitleGoogle = wavToText(sourpath=tempAudioPath)
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 提取的文字为 : '+ subtitleGoogle)
+            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' Google提取的文字为 : '+ subtitleGoogle)
 
             # 验证密码
             mima = validateMima(subtitleGoogle)
@@ -88,6 +124,7 @@ def getMima(yt):
                 return mima
             else:
                 subtitleBaidu = baiduSpeech.wavToText(tempAudioPath)
+                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' Baidu 提取的文字为 : ' + subtitleBaidu)
                 # 验证密码
                 mima = validateMima(subtitleBaidu)
                 if mima != -1:
@@ -112,50 +149,35 @@ def getMima(yt):
             continue
 
 # 使用密码在页面上获取v2ray的免费连接地址 并下载
-def getV2ray(uncodeSession,mima):
+def getV2ray(yudouTodayUrl,mima):
     # 执行页面的js代码
     uncodeJs = "multiDecrypt('" + str(mima) + "');"
 
 
-    #################################################################################################
-    def execute_js(uncodeSession,uncodeJs):
-        global i
-        if i<=30:
-            print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 开始执行js代码:' + uncodeJs)
-            try:
-                uncodeSession.html.render(script=uncodeJs,retries = 1,timeout = 30,sleep = 3)
-                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码成功:' + uncodeJs)
-            except Exception as e:
-                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码异常：', e)
-                i=i+1
-                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 重试：'+ str(i) )
-                return  getV2ray(uncodeSession, mima)
+    with HTMLSession() as session:
+        yudouSession = session.get(yudouTodayUrl)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 正在加载js...")
+        # yudouSession.html.render()  # 进行渲染
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 正在执行解密函数...")
+        yudouSession.html.render(script=uncodeJs, timeout=15)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 执行解密完成...")
+        v2rayElement = yudouSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')
+        v2rayUrl = v2rayElement[0]
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
 
-            finally:
-                print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码完成' + uncodeJs)
-    ##################################################################################################
-    # 执行js代码
-    execute_js(uncodeSession,uncodeJs)
-
-
-
-
-
-    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 执行js代码wancheng：', uncodeJs)
-    # 获取 'v2ray/小火箭/winxray等订阅链接，不需要开代理，即可更新订阅链接'
-    # '//*[@id="result"]/p[2]/text()[2]'
-    v2rayElement = uncodeSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')
-    v2rayUrl = v2rayElement[0]
-    print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
 
     #  写入github page 主页文件
     with open("./docs/index.html", "w", encoding="utf-8") as f:
         f.write('{},{},{} '.format(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), " 最新的V2Ray订阅链接地址：", v2rayUrl))
 
+
+
+
     # 下载最新V2Ray订阅链接
-    v2raySession = video_result['session'].get(v2rayUrl)
-    v2rayText = v2raySession.text
-    print('\n', datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 最新V2Ray订阅链接内容：\n', v2rayText)
+    with HTMLSession() as session:
+        v2raySession = session.get(v2rayUrl)
+        v2rayText = v2raySession.text
+        print('\n', datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' 最新V2Ray订阅链接内容：\n', v2rayText)
 
     #  写入github page文件
     with open("./docs/v2ray/index.html", "w", encoding="utf-8") as f:
@@ -180,14 +202,12 @@ def removeTempFile():
 
 
 if __name__ == '__main__':
-    # 创建 YouTube 对象
-    yt = YouTube(video_url)
 
     # 从youtube获取密码
-    mima = getMima(yt)
+    mima = getMima(youtubeUrl,video_fullpath)
 
     # 从页面获取v2ray链接并下载
-    v2rayUrl = getV2ray(uncodeSession, mima)
+    v2rayUrl = getV2ray(yudouTodayUrl, mima)
 
     # pushplus` 推送到微信
     pushplus.pushplus_notify('最新的V2Ray订阅链接', v2rayUrl)

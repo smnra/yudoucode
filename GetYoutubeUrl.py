@@ -10,11 +10,11 @@ def getYoutubeUrl():
     yudouSession = session.get('https://www.yudou66.com/')
 
     yudouAElement = yudouSession.html.xpath('//*[@id="Blog1"]/div[1]/article[1]/div[1]/h2/a')
-    yudouUrl = yudouAElement[0].attrs['href']
-    print('\n'+datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新文章链接：" + yudouUrl)
+    yudouTodayUrl = yudouAElement[0].attrs['href']
+    print('\n'+datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新文章链接：" + yudouTodayUrl)
 
     # 获取youtube的的链接
-    youtubeSession = session.get(yudouUrl)
+    youtubeSession = session.get(yudouTodayUrl)
     youtubeElement = youtubeSession.html.xpath('//*[@id="post-body"]/p[8]/a')
     youtubeUrl = youtubeElement[0].attrs['href']
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新解密youtube视频链接：" + youtubeUrl)
@@ -24,12 +24,8 @@ def getYoutubeUrl():
     except Exception as e:  # 这里是为了测试render方法是否正常工作
         print(e)
 
-    # youtubeSession.html.render(script="document.title = '新的页面标题';", retries=1, timeout=3, sleep=2)
-    # print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 页面标题：" + youtubeSession.html.find('title', first=True).text)
-
-
     # 返回youtube的链接和session对象
-    return {'url' : youtubeUrl,'session' : session,'response' : youtubeSession}
+    return {'youtubeUrl' : youtubeUrl,'yudouTodayUrl': yudouTodayUrl,'session' : session,'response' : youtubeSession}
 
 if __name__ == '__main__':
     video_result =getYoutubeUrl()
