@@ -164,6 +164,8 @@ def getV2ray(yudouTodayUrl,mima):
         # 解密
         result = decrypt(encryption, mima)
         result = decodeUrl(result)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", result)
+
 
         # 匹配 v2ray 链接
         v2rayUrl =  re.findall(r'.+>(http.+\.txt)<.+', result, re.S)[0]
