@@ -3,7 +3,7 @@ import base64
 from hashlib import md5
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-from urllib.parse import unquote
+from urllib.parse import unquote,quote
 
 
 
@@ -11,7 +11,9 @@ def decodeUrl(str):
     # print(unquote(str))
     return unquote(str)
 
-
+def encodeUrl(str):
+    # print(unquote(str))
+    return quote(str)
 
 
 

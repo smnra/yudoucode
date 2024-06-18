@@ -8,7 +8,7 @@ import GetYoutubeUrl
 import speechToText.baiduSpeech  as baiduSpeech
 
 from requests_html import HTMLSession
-from aesDecrypt import decrypt,decodeUrl
+from aesDecrypt import decrypt,decodeUrl,encodeUrl
 
 
 # 视频下载路径
@@ -164,13 +164,15 @@ def getV2ray(yudouTodayUrl,mima):
         # 解密
         result = decrypt(encryption, mima)
         result = decodeUrl(result)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", result)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", encodeUrl(result))
 
 
+    try:
         # 匹配 v2ray 链接
         v2rayUrl =  re.findall(r'.+>(http.+\.txt)<.+', result, re.S)[0]
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
-
+    except Exception as e:
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析V2Ray订阅链接异常：", e)
 
 
     if not os.path.exists("./docs/v2ray/"):
