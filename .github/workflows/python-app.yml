@@ -37,6 +37,7 @@ jobs:
           pip install requests_html==0.10.0 lxml==5.2.2 lxml_html_clean==0.1.1 pytube==15.0.0 pydub==0.25.1 speechrecognition==3.10.0 pyppeteer==1.0.2 
           pip install baidu-aip==4.16.13
           pip install chardet==5.2.0
+          pip install cryptography==42.0.8
 
 #      - name: 下载 chroemium
 #        run: |
