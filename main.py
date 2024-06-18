@@ -164,7 +164,7 @@ def getV2ray(yudouTodayUrl,mima):
         # 解密
         result = decrypt(encryption, mima)
         result = decodeUrl(result)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", result.decode('utf-8'))
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", result.encode('utf-8'))
 
 
     try:
