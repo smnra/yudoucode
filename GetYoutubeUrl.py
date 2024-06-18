@@ -19,13 +19,13 @@ def getYoutubeUrl():
     youtubeUrl = youtubeElement[0].attrs['href']
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新解密youtube视频链接：" + youtubeUrl)
 
-    try:
-        youtubeSession.html.render(script="console.log('hhhhhhhhh');", retries=1, timeout=30,sleep=2)
-    except Exception as e:  # 这里是为了测试render方法是否正常工作
-        print(e)
+    # try:
+    #     youtubeSession.html.render(script="console.log('hhhhhhhhh');", retries=1, timeout=30,sleep=2)
+    # except Exception as e:  # 这里是为了测试render方法是否正常工作
+    #     print(e)
 
     # 返回youtube的链接和session对象
-    return {'youtubeUrl' : youtubeUrl,'yudouTodayUrl': yudouTodayUrl,'session' : session,'response' : youtubeSession}
+    return {'youtubeUrl' : youtubeUrl,'yudouTodayUrl': yudouTodayUrl}
 
 if __name__ == '__main__':
     video_result =getYoutubeUrl()

@@ -8,7 +8,7 @@ import GetYoutubeUrl
 import speechToText.baiduSpeech  as baiduSpeech
 
 from requests_html import HTMLSession
-
+from aesDecrypt import decrypt,decodeUrl
 
 
 # 视频下载路径
@@ -156,15 +156,23 @@ def getV2ray(yudouTodayUrl,mima):
 
     with HTMLSession() as session:
         yudouSession = session.get(yudouTodayUrl)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 正在加载js...")
-        # yudouSession.html.render()  # 进行渲染
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 正在执行解密函数...")
-        yudouSession.html.render(script=uncodeJs, timeout=15)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 执行解密完成...")
-        v2rayElement = yudouSession.html.xpath('//*[@id="result"]/p[2]/text()[2]')
-        v2rayUrl = v2rayElement[0]
+        tmpStr = yudouSession.text
+        encryption = re.findall(r'.+var encryption.+"(.+==)",.+', tmpStr, re.S)
+        encryption = encryption[0].encode('utf-8')
+        mima = str(mima).encode('utf-8')
+
+        # 解密
+        result = decrypt(encryption, mima)
+        result = decodeUrl(result)
+
+        # 匹配 v2ray 链接
+        v2rayUrl =  re.findall(r'.+>(http.+\.txt)<.+', result, re.S)[0]
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
 
+
+
+    if not os.path.exists("./docs/v2ray/"):
+        os.makedirs(os.path.abspath("./docs/v2ray"))
 
     #  写入github page 主页文件
     with open("./docs/index.html", "w", encoding="utf-8") as f:
