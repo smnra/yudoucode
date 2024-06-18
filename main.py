@@ -213,6 +213,7 @@ if __name__ == '__main__':
 
     # 从youtube获取密码
     mima = getMima(youtubeUrl,video_fullpath)
+    print(mima)
 
     # 从页面获取v2ray链接并下载
     v2rayUrl = getV2ray(yudouTodayUrl, mima)
