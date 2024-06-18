@@ -176,7 +176,7 @@ def getV2ray(yudouTodayUrl,mima):
 
     #  写入github page 主页文件
     with open("./docs/index.html", "w", encoding="utf-8") as f:
-        f.write('{},{},{} '.format(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), " 最新的V2Ray订阅链接地址：", v2rayUrl))
+        f.write('{},{},{} '.format(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), " 最新的V2Ray订阅链接地址：\n", result))
 
 
 
