@@ -164,7 +164,7 @@ def getV2ray(yudouTodayUrl,mima):
         # 解密
         result = decrypt(encryption, mima)
         result = decodeUrl(result)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", encodeUrl(result))
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解密后的链接：", result.decode('utf-8'))
 
 
     try:
@@ -173,6 +173,7 @@ def getV2ray(yudouTodayUrl,mima):
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
     except Exception as e:
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析V2Ray订阅链接异常：", e)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " re  匹配异常",  re.findall(r'.+>(http.+\.txt)<.+', result, re.S))
 
 
     if not os.path.exists("./docs/v2ray/"):
