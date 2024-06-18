@@ -165,15 +165,6 @@ def getV2ray(yudouTodayUrl,mima):
         result = decrypt(encryption, mima)
         result = decodeUrl(result)
 
-    try:
-        # 匹配 v2ray 链接
-        v2rayUrl =  re.findall(r'.+>(http.+\.txt)<.+', result, re.S)
-        v2rayUrl = v2rayUrl[0]
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
-    except Exception as e:
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析V2Ray订阅链接异常：", e)
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " re  匹配异常",  re.findall(r'.+>(http.+\.txt)<.+', result, re.S))
-
 
     if not os.path.exists("./docs/v2ray/"):
         os.makedirs(os.path.abspath("./docs/v2ray"))
@@ -182,6 +173,15 @@ def getV2ray(yudouTodayUrl,mima):
     with open("./docs/index.html", "w", encoding="utf-8") as f:
         f.write('{},{},{} '.format(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), " 最新的V2Ray订阅链接地址：\n", result))
 
+
+    try:
+        # 匹配 v2ray 链接
+        v2rayUrl =  re.findall(r'.+等订阅链接，不需要开代理，即可更新订阅链接\<br \/\>(http.+\.txt)\<.+', result, re.S)
+        v2rayUrl = v2rayUrl[0]
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
+    except Exception as e:
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析V2Ray订阅链接异常：", e)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " re  匹配异常",  re.findall(r'.+等订阅链接，不需要开代理，即可更新订阅链接\<br \/\>(http.+\.txt)\<.+', result, re.S))
 
 
 
