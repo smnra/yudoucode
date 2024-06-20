@@ -87,7 +87,7 @@ def v2rayToFile(v2rayResult):
         # 匹配 v2ray 链接  并下载最新订阅链接
         v2rayUrl =  re.findall(r'.+等订阅链接，不需要开代理，即可更新订阅链接\<br \/\>(http.+\.txt)\<.+', v2rayResult, re.S)
         v2rayUrl = v2rayUrl[0]
-        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayResult)
+        print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 最新的V2Ray订阅链接地址：", v2rayUrl)
     except Exception as e:
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " 解析V2Ray订阅链接异常：", e)
         print(datetime.now().strftime("%Y/%m/%d %H:%M:%S") + " re  匹配异常",  re.findall(r'.+等订阅链接，不需要开代理，即可更新订阅链接\<br \/\>(http.+\.txt)\<.+', v2rayResult, re.S))
