@@ -45,7 +45,6 @@ jobs:
 #          source venv/bin/activate
 #          python3 GetYoutubeUrl.py
 
-
       - name: 运行主程序
         env:
           APP_ID: ${{ secrets.APP_ID }}
@@ -54,7 +53,7 @@ jobs:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         run: |
           source venv/bin/activate
-          python3 main.py
+          python3 bruteForce.py
       - name: 配置Git
         run: |
           git config --global user.name "snmra"
