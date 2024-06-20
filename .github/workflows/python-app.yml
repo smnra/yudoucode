@@ -1,3 +1,27 @@
+Skip to content
+Navigation Menu
+smnra
+/
+yudoucode
+
+Type / to search
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+7
+Insights
+Settings
+更新与提交工作流程
+.github/workflows/python-app.yml #130
+Jobs
+Run details
+Workflow file for this run
+.github/workflows/python-app.yml at 5d3694b
 name: 更新与提交工作流程
 
 on:
@@ -24,6 +48,10 @@ jobs:
         with:
           python-version: "3.10.14"
 
+      - name: 安装FFmpeg
+        run: |
+          sudo apt-get update
+#          sudo apt-get install -y ffmpeg
       - name: 创建并激活虚拟环境，安装依赖
         run: |
           python -m venv venv
@@ -34,6 +62,11 @@ jobs:
 #          pip install baidu-aip==4.16.13
 #          pip install chardet==5.2.0
           pip install cryptography==42.0.8
+#      - name: 下载 chroemium
+#        run: |
+#          source venv/bin/activate
+#          python3 GetYoutubeUrl.py
+
 
       - name: 运行主程序
         env:
@@ -44,8 +77,6 @@ jobs:
         run: |
           source venv/bin/activate
           python3 main.py
-
-
       - name: 配置Git
         run: |
           git config --global user.name "snmra"
@@ -65,4 +96,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GT_PAT }}
 
       - name: 备注
-        run: echo $(date +"%Y-%m-%d %H:%M:%S") "Workflow completed successfully  修改为暴力破解模块AES解密  "
+        run: echo $(date +"%Y-%m-%d %H:%M:%S") "Workflow completed successfully  修改为python 模块AES解密 h "
