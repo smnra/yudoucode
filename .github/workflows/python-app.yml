@@ -24,13 +24,6 @@ jobs:
         with:
           python-version: "3.10.14"
 
-      - name: 安装FFmpeg
-        run: |
-          echo Not Installing FFmpeg...
-#          sudo apt-get update
-#          sudo apt-get install -y ffmpeg
-
-
       - name: 创建并激活虚拟环境，安装依赖
         run: |
           python -m venv venv
