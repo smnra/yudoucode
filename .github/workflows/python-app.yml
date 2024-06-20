@@ -28,7 +28,6 @@ jobs:
       - name: 安装FFmpeg
         run: |
           echo 'not install ffmpeg'
-#          sudo apt-get update
       - name: 创建并激活虚拟环境，安装依赖
         run: |
           python -m venv venv
