@@ -1,27 +1,4 @@
-Skip to content
-Navigation Menu
-smnra
-/
-yudoucode
 
-Type / to search
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-7
-Insights
-Settings
-更新与提交工作流程
-.github/workflows/python-app.yml #130
-Jobs
-Run details
-Workflow file for this run
-.github/workflows/python-app.yml at 5d3694b
 name: 更新与提交工作流程
 
 on:
@@ -50,7 +27,8 @@ jobs:
 
       - name: 安装FFmpeg
         run: |
-          sudo apt-get update
+          echo 'not install ffmpeg'
+#          sudo apt-get update
 #          sudo apt-get install -y ffmpeg
       - name: 创建并激活虚拟环境，安装依赖
         run: |
@@ -96,4 +74,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GT_PAT }}
 
       - name: 备注
-        run: echo $(date +"%Y-%m-%d %H:%M:%S") "Workflow completed successfully  修改为python 模块AES解密 h "
+        run: echo $(date +"%Y-%m-%d %H:%M:%S") "Workflow completed successfully  修改为暴力猜解AES解密密码 "
