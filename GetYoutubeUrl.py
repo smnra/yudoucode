@@ -3,9 +3,9 @@ from datetime import datetime
 
 
 
-url = 'https://www.mibei77.com/'
+url = 'https://www.mibei77.com'
 
-def getYoutubeUrl(url):
+def getYoutubeUrl(url='https://www.mibei77.com'):
     session = HTMLSession()
     # 其中get请求中的参数和requests库中的get是一样的可以随意添加
 
