@@ -20,13 +20,6 @@ i = 0
 
 
 
-# 获取要下载的 YouTube 视频链接
-tmpResult= GetYoutubeUrl.getYoutubeUrl()
-yudouTodayUrl = tmpResult['yudouTodayUrl']      # 今日yudou最新连接
-youtubeUrl = tmpResult['youtubeUrl']            # youtobe最新连接解密视频的链接
-
-
-
 
 
 
@@ -214,6 +207,18 @@ def removeTempFile():
 
 
 if __name__ == '__main__':
+    # 获取要下载的 YouTube 视频链接
+    v2rayDict = GetYoutubeUrl.getV2ray()
+    v2rayText = v2rayDict['v2rayText']
+    pass
+
+
+
+    """
+    # 获取要下载的 YouTube 视频链接
+    tmpResult = GetYoutubeUrl.getYoutubeUrl()
+    yudouTodayUrl = tmpResult['yudouTodayUrl']  # 今日yudou最新连接
+    youtubeUrl = tmpResult['youtubeUrl']  # youtobe最新连接解密视频的链接
 
     # 从youtube获取密码
     mima = getMima(youtubeUrl,video_fullpath)
@@ -228,7 +233,7 @@ if __name__ == '__main__':
     # 清理临时文件
     removeTempFile()
 
-
+    """
 
 
 
