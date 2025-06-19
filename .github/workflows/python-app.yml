@@ -67,8 +67,7 @@ jobs:
           git pull # 确保本地是最新的
           git add ./docs/index.html # 添加所有改动，根据实际情况调整 
           git add ./docs/v2ray/index.html # 添加所有改动，根据实际情况调整
-          # git diff-index --quiet HEAD || git commit -m "Automatic update at $(date)" # 只有改动才提交
-          git rebase --continue
+          # git diff-index --quiet HEAD || git commit -m "Automatic update at $(date)"  
           git commit -a -m "Automatic update at $(date)"
           git push origin HEAD:$GITHUB_REF
         env:
